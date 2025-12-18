@@ -1,5 +1,16 @@
 # Algorithms Handbook – podstawy sortowania (Python)
 
+Ten dokument jest **edukacyjnym handbookiem**, którego celem jest:
+- zrozumienie *jak działają algorytmy sortowania*,
+- wyrobienie **modelu mentalnego**, a nie zapamiętywanie kodu,
+- umiejętność debugowania i tłumaczenia algorytmów „na głos”.
+
+Każdy algorytm zawiera:
+- kod,
+- opis krok po kroku,
+- właściwości obliczeniowe,
+- kiedy i dlaczego go używać.
+
 ---
 
 ## 1. Zamiana wartości zmiennych (Python idiom)
@@ -10,14 +21,27 @@ y = 100
 x, y = y, x
 ```
 
+### Co tu się dzieje
+
+Python pozwala na **jednoczesne przypisanie wielu wartości**.
+Pod spodem tworzona jest krotka tymczasowa, dzięki czemu:
+
+- nie potrzebujesz zmiennej pomocniczej,
+- operacja jest czytelna i bezpieczna,
+- idiom jest powszechnie używany w sortowaniach.
+
 ### Do zapamiętania
 
 * idiom Pythona
-* często używany w algorytmach sortowania
+* zero boilerplate
+* idealny do algorytmów in-place
 
 ---
 
 ## 2. Bubble Sort – wersja podstawowa
+
+Bubble Sort to najprostszy algorytm sortowania.
+Polega na **wielokrotnym przechodzeniu po liście** i zamienianiu sąsiednich elementów.
 
 ```python
 def sort_bubble(list):
@@ -30,9 +54,24 @@ def sort_bubble(list):
                 is_change = True
 ```
 
+### Jak to działa mentalnie
+
+- największe elementy „wypływają” na koniec listy
+- każda iteracja skraca obszar chaosu
+- brak zamian = lista posortowana
+
+### Właściwości
+
+* czas: **O(n²)**
+* stabilny
+* in-place
+* bardzo wolny – tylko edukacyjnie
+
 ---
 
 ## 3. Insertion Sort
+
+Insertion Sort działa jak **sortowanie kart w ręce**.
 
 ```python
 def sort_insert(list):
@@ -45,9 +84,24 @@ def sort_insert(list):
         list[curr_idx + 1] = value
 ```
 
+### Model mentalny
+
+- lewa część listy jest zawsze posortowana
+- jeden element jest „wstawiany” w dobre miejsce
+- przesuwasz elementy w prawo, aż znajdziesz lukę
+
+### Właściwości
+
+* czas: **O(n²)**, najlepszy: **O(n)**
+* stabilny
+* in-place
+* świetny dla małych lub prawie posortowanych danych
+
 ---
 
 ## 4. Selection Sort
+
+Selection Sort polega na **wybieraniu minimum** z nieposortowanej części.
 
 ```python
 def sort_selection(list):
@@ -59,122 +113,142 @@ def sort_selection(list):
         list[run], list[min_index] = list[min_index], list[run]
 ```
 
+### Jak myśleć
+
+- dzielisz listę na posortowaną i nieposortowaną
+- zawsze szukasz minimum
+- wykonujesz dokładnie jeden swap na iterację
+
+### Właściwości
+
+* czas: **O(n²)**
+* niestabilny
+* in-place
+* mało swapów, dużo porównań
+
 ---
 
-## 5. Merge Sort – wersja EDUKACYJNA (z debugiem)
+## 5. Merge Sort – idea
 
-> ⚠️ Ta wersja **nie jest do produkcji**. Jest po to, żeby **zobaczyć moment sortowania**.
+Merge Sort to algorytm **dziel i zwyciężaj**.
+
+> Kluczowa prawda:
+> **Merge Sort nie sortuje list – on sortuje DWIE LISTY.**
+
+Rekurencja służy tylko do dostarczenia danych.
+
+---
+
+## 6. Merge Sort – wersja edukacyjna (z debugiem)
 
 ```python
 def sort_merge(list):
-    list_len = len(list)
-    sorted_list = []
+    if len(list) <= 1:
+        return list
 
-    if list_len <= 1:
-        sorted_list = list
-    else:
-        middle_point = list_len // 2
-        list_left = sort_merge(list[:middle_point])
-        list_right = sort_merge(list[middle_point:])
+    middle = len(list) // 2
+    left = sort_merge(list[:middle])
+    right = sort_merge(list[middle:])
 
-        print(f'LL: {list_left} / LR: {list_right}')
+    result = []
+    i = j = 0
 
-        idx_left = idx_right = 0
-        while idx_left < len(list_left) and idx_right < len(list_right):
-            if list_left[idx_left] < list_right[idx_right]:
-                sorted_list.append(list_left[idx_left])
-                idx_left += 1
-            else:
-                sorted_list.append(list_right[idx_right])
-                idx_right += 1
-            print(f'sorted_list: {sorted_list}')
+    while i < len(left) and j < len(right):
+        if left[i] < right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
 
-        sorted_list.extend(list_left[idx_left:])
-        sorted_list.extend(list_right[idx_right:])
-        print(f'sorted_list_extended: {sorted_list}')
-
-    return sorted_list
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
 ```
 
 ### Co tu obserwować
 
-* **dzielenie nic nie sortuje**
-* sortowanie zachodzi **wyłącznie w pętli while**
-* zawsze scalane są **DWIE już posortowane listy**
+- rekurencja NIC nie sortuje
+- sortowanie zachodzi wyłącznie w scalaniu
+- zawsze pracujesz na już posortowanych danych
 
 ---
 
-## 6. Merge Sort – wersja CZYSTA (produkcja)
+## 7. Merge Sort – właściwości
 
-> Ten wariant **oddziela rekurencję od scalania** – to jest właściwy model mentalny.
-
-```python
-def sort_merge_2(list):
-    list_len = len(list)
-    if list_len <= 1:
-        return list
-
-    middle_point = list_len // 2
-    list_left = sort_merge_2(list[:middle_point])
-    list_right = sort_merge_2(list[middle_point:])
-
-    return _sort_merge_2(list_left, list_right)
-
-
-def _sort_merge_2(list_left, list_right):
-    idx_left = idx_right = 0
-    result = []
-
-    while idx_left < len(list_left) and idx_right < len(list_right):
-        if list_left[idx_left] < list_right[idx_right]:
-            result.append(list_left[idx_left])
-            idx_left += 1
-        else:
-            result.append(list_right[idx_right])
-            idx_right += 1
-
-    result.extend(list_left[idx_left:])
-    result.extend(list_right[idx_right:])
-    return result
-```
-
-```python
-print(sort_merge_2([7, 2, 9, 1, 13, 3]))
-```
-
-### Dlaczego ta wersja jest lepsza
-
-* **rekurencja = logistyka**
-* **_sort_merge_2 = prawdziwy algorytm**
-* łatwo testować, łatwo debugować
-
----
-
-## 7. Najważniejszy mentalny model (KRYTYCZNE)
-
-> **Merge Sort NIE sortuje list.**
-> **Merge Sort sortuje TYLKO DWIE LISTY.**
-
-Rekurencja służy wyłącznie do tego, aby:
-
-* dostać dwie mniejsze listy
-* które są już posortowane
-
----
-
-## 8. Właściwości Merge Sort
-
-* czas: **O(n log n)** (zawsze)
+* czas: **O(n log n)**
 * pamięć: **O(n)**
 * stabilny
-* nie in-place
+* przewidywalny
 
 ---
 
-## 9. TL;DR – Merge Sort
+## 8. Quick Sort – idea
 
-* dzielenie ≠ sortowanie
-* sortowanie dzieje się **przy scalaniu**
-* `_sort_merge_2()` to serce algorytmu
-* rekurencja to tylko dostarczanie danych
-* jeśli rozumiesz scalanie → rozumiesz w
+Quick Sort działa odwrotnie niż Merge Sort.
+
+- nie scala
+- ustawia **jeden element (pivot)**
+- resztę zostawia rekurencji
+
+---
+
+## 9. Quick Sort – wersja edukacyjna
+
+```python
+def divide(arr, start, end):
+    pivot = arr[end]
+    i = start
+
+    for j in range(start, end):
+        if arr[j] <= pivot:
+            arr[i], arr[j] = arr[j], arr[i]
+            i += 1
+
+    arr[i], arr[end] = arr[end], arr[i]
+    return i
+
+
+def quick_sort(arr, start, end):
+    if start < end:
+        p = divide(arr, start, end)
+        quick_sort(arr, start, p - 1)
+        quick_sort(arr, p + 1, end)
+```
+
+### Model mentalny
+
+- pivot trafia na swoje miejsce
+- elementy mniejsze są po lewej
+- większe po prawej
+- rekurencja robi resztę
+
+---
+
+## 10. Quick Sort – właściwości
+
+* średni czas: **O(n log n)**
+* najgorszy: **O(n²)**
+* in-place
+* niestabilny
+
+---
+
+## 11. Podsumowanie
+
+| Algorytm | Czas | Pamięć | Stabilność |
+|--------|------|--------|------------|
+| Bubble | n² | 1 | ✅ |
+| Insertion | n² | 1 | ✅ |
+| Selection | n² | 1 | ❌ |
+| Merge | n log n | n | ✅ |
+| Quick | n log n | log n | ❌ |
+
+---
+
+## 12. Najważniejsze wnioski
+
+* algorytmy sortowania uczą myślenia
+* rekurencja to logistyka
+* scalanie i pivot to sedno
+* rozumienie > zapamiętywanie
