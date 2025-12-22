@@ -252,3 +252,25 @@ def quick_sort(arr, start, end):
 * rekurencja to logistyka
 * scalanie i pivot to sedno
 * rozumienie > zapamiętywanie
+
+# Algorytmy – wyszukiwanie liniowe (Linear Search)
+
+## 1. Definicja
+
+**Wyszukiwanie liniowe** (linear search) to najprostszy algorytm wyszukiwania elementu w liście.  
+Polega na **sprawdzaniu kolejnych elementów jeden po drugim**, aż do znalezienia wartości lub końca listy.
+
+---
+
+## 2. Implementacja
+
+```python
+def search_linear(value, list):
+    idx = 0
+    found = False
+    while not found and idx < len(list):
+        if list[idx] == value:
+            found = True
+        else:
+            idx += 1
+    return idx if idx < len(list) else None
