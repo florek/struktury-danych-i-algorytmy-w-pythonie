@@ -1,7 +1,7 @@
-# Algorithms Handbook – podstawy sortowania (Python)
+# Algorithms Handbook – sortowanie i wyszukiwanie (Python)
 
 Ten dokument jest **edukacyjnym handbookiem**, którego celem jest:
-- zrozumienie *jak działają algorytmy sortowania*,
+- zrozumienie *jak działają algorytmy sortowania i wyszukiwania*,
 - wyrobienie **modelu mentalnego**, a nie zapamiętywanie kodu,
 - umiejętność debugowania i tłumaczenia algorytmów „na głos”.
 
@@ -234,7 +234,7 @@ def quick_sort(arr, start, end):
 
 ---
 
-## 11. Podsumowanie
+## 11. Podsumowanie algorytmów sortowania
 
 | Algorytm | Czas | Pamięć | Stabilność |
 |--------|------|--------|------------|
@@ -246,7 +246,7 @@ def quick_sort(arr, start, end):
 
 ---
 
-## 12. Najważniejsze wnioski
+## 12. Najważniejsze wnioski – sortowanie
 
 * algorytmy sortowania uczą myślenia
 * rekurencja to logistyka
@@ -274,3 +274,21 @@ def search_linear(value, list):
         else:
             idx += 1
     return idx if idx < len(list) else None
+
+---
+
+## 3. Podsumowanie algorytmów wyszukiwania
+
+| Algorytm | Czas | Wymagania | Kiedy używać |
+|--------|------|-----------|--------------|
+| Linear Search | O(n) | brak | małe listy, nieposortowane dane |
+| Binary Search | O(log n) | lista posortowana | duże zbiory, częste wyszukiwania |
+
+---
+
+## 4. Najważniejsze wnioski – wyszukiwanie
+
+* wyszukiwanie liniowe jest uniwersalne, ale wolne
+* wyszukiwanie binarne jest szybkie, ale wymaga posortowania
+* wybór algorytmu zależy od kontekstu i częstotliwości wyszukiwań
+* sortowanie raz + wiele wyszukiwań binarnych często lepsze niż wiele wyszukiwań liniowych
