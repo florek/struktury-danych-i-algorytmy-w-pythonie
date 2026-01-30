@@ -32,6 +32,10 @@ Projekt zawiera następujące pliki z implementacjami algorytmów:
 - **[p7.md](p7.md)** - Binary Search (Wyszukiwanie binarne)
 - **[p8.md](p8.md)** - Interpolation Search (Wyszukiwanie interpolacyjne)
 
+### Selekcja
+
+- **[p9.md](p9.md)** - Quick Select (Szybka selekcja)
+
 ---
 
 ## Podsumowanie algorytmów sortowania
@@ -56,6 +60,14 @@ Projekt zawiera następujące pliki z implementacjami algorytmów:
 
 ---
 
+## Podsumowanie algorytmów selekcji
+
+| Algorytm | Czas średni | Czas najgorszy | Wymagania | Kiedy używać | Plik |
+|--------|-------------|----------------|-----------|--------------|------|
+| Quick Select | O(n) | O(n²) | brak | k-ty najmniejszy element bez sortowania | [p9.md](p9.md) |
+
+---
+
 ## Najważniejsze wnioski – sortowanie
 
 * algorytmy sortowania uczą myślenia
@@ -72,3 +84,13 @@ Projekt zawiera następujące pliki z implementacjami algorytmów:
 * wyszukiwanie interpolacyjne jest najszybsze dla równomiernie rozłożonych danych
 * wybór algorytmu zależy od kontekstu i częstotliwości wyszukiwań
 * sortowanie raz + wiele wyszukiwań binarnych często lepsze niż wiele wyszukiwań liniowych
+
+---
+
+## Najważniejsze wnioski – selekcja
+
+* Quick Select znajduje k-ty element bez sortowania całej tablicy
+* średnia złożoność O(n) czyni go bardzo efektywnym
+* lepszy niż sortowanie gdy potrzebujesz tylko jednego elementu
+* wykorzystuje partycjonowanie podobnie jak Quick Sort
+* idealny do znajdowania mediany, percentyli, k-tego najmniejszego elementu
